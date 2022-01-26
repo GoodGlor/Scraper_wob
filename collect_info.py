@@ -2,10 +2,11 @@ from aiohttp.client_exceptions import *
 from bs4 import BeautifulSoup as bs
 from fake_headers import Headers
 from get_proxy import ListProxy
-import csv
-import random
+import pandas as pd
 import aiohttp
 import asyncio
+import random
+import csv
 import os
 import gc
 
@@ -31,10 +32,20 @@ class CollectInfo:
         :return: random proxy
         """
         try:
-            return random.choice(PROXY_LIST.main())
+            return f"http://{random.choice(PROXY_LIST.main())}"
         except IndexError:
             print('No proxy in list')
             return False
+
+    def convert_csv_to_excel(self):
+        current_path = os.getcwd()
+        path_to_file = f'{current_path}/{self.category}/{self.sub_category}/result.csv'
+
+        read_file = pd.read_csv(path_to_file)
+        read_file.to_excel(path_to_file.replace('.csv', '.xlsx'), index=None, header=True)
+
+        os.remove(path_to_file)
+        os.remove(path_to_file.replace('result.csv', f'{self.sub_category}.csv'))
 
     def write_to_file(self, all_data: tuple, first_call: bool) -> None:
         '''
@@ -201,3 +212,4 @@ class CollectInfo:
             del all_values
             del all_links[0:1000]
             gc.collect()
+        self.convert_csv_to_excel()

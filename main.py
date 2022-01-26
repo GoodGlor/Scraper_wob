@@ -40,7 +40,7 @@ def main():
         for i, url_link in enumerate(values):
             sub_category = f"{category_key}_part_{i}"
             all_links_and_data = CollectLinks(max_connections_to_website, category_key, sub_category, url_link)
-
+            all_links_and_data.main()
             if not all_links_and_data.main():
                 break
 

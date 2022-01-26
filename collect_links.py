@@ -65,7 +65,7 @@ class CollectLinks:
            :return: random proxy
         """
         try:
-            return random.choice(PROXY_LIST.main())
+            return f"http://{random.choice(PROXY_LIST.main())}"
         except IndexError:
             return False
 
@@ -216,6 +216,5 @@ class CollectLinks:
         ]
 
         self.write_to_file(all_data)
-
         del all_data
         gc.collect()

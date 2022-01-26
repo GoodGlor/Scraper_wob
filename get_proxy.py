@@ -1,4 +1,3 @@
-import csv
 import os
 import gc
 
@@ -8,22 +7,21 @@ class ListProxy:
         self.current_directory = os.getcwd()
 
     def all_poxy_list(self) -> list:
-        with open(f'{self.current_directory}/proxy.csv', 'r') as file:
-            reader = csv.DictReader(file, fieldnames=['proxy'])
-            proxies = []
-            for proxyy in reader:
-                if proxyy['proxy'] != 'proxy':
-                    proxies.append(proxyy['proxy'])
+        with open(f'{self.current_directory}/proxy.txt', 'r') as file:
+            proxies = [proxy.strip()
+                       for proxy in file.readlines()
+                       ]
             return proxies
 
     def delete_invalid_proxy(self, proxy: str, proxy_list: list):
-        with open(f'{self.current_directory}/proxy.csv', 'w') as file:
-            writer = csv.DictWriter(file, fieldnames=['proxy'])
-            new_proxy_list = [{'proxy': row} for row in proxy_list if proxy != row]
-            writer.writeheader()
-            writer.writerows(new_proxy_list)
+        with open(f'{self.current_directory}/proxy.txt', 'w') as file:
+            proxy_list = [pr + '\n'
+                          for pr in proxy_list
+                          if proxy != pr]
 
-            del new_proxy_list
+            file.writelines(proxy_list)
+
+            del proxy_list
             gc.collect()
 
     def main(self) -> list:
