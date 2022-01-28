@@ -34,7 +34,7 @@ def read_file(category, sub_category) -> list:
 
 
 def main():
-    max_connections_to_website = 150
+    max_connections_to_website = 15
 
     for category_key, values in list_categories.items():
         for i, url_link in enumerate(values):
@@ -46,17 +46,22 @@ def main():
 
             del all_links_and_data
             gc.collect()
+            print(f'Done {sub_category}')
+            break
+        break
 
-        for i, path in enumerate(select_files_in_directories(category_key)):
-            sub_category = f"{category_key}_part_{i}"
-            data = read_file(category_key, sub_category)
-            collect_data = CollectInfo(max_connections_to_website, category_key, sub_category, data)
-            if not collect_data.main():
-                break
-
-            del data
-            del collect_data
-            gc.collect()
+        # for i, path in enumerate(select_files_in_directories(category_key)):
+        #     sub_category = f"{category_key}_part_{i}"
+        #     data = read_file(category_key, sub_category)
+        #     collect_data = CollectInfo(max_connections_to_website, category_key, sub_category, data)
+        #     if not collect_data.main():
+        #         break
+        #
+        #     del data
+        #     del collect_data
+        #     gc.collect()
+        #
+        #     print(f'Done {sub_category}')
 
 
 if __name__ == '__main__':

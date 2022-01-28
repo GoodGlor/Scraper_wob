@@ -9,7 +9,6 @@ import asyncio
 import os
 import gc
 
-PROXY_LIST = ListProxy()
 
 
 class CollectLinks:
@@ -58,16 +57,16 @@ class CollectLinks:
             writer.writeheader()
             writer.writerows(all_data)
 
-    @staticmethod
-    def get_proxy() -> str or bool:
-        """
-           Get random proxy
-           :return: random proxy
-        """
-        try:
-            return f"http://{random.choice(PROXY_LIST.main())}"
-        except IndexError:
-            return False
+    # @staticmethod
+    # def get_proxy() -> str or bool:
+    #     """
+    #        Get random proxy
+    #        :return: random proxy
+    #     """
+    #     try:
+    #         return f"http://{random.choice(PROXY_LIST.main())}"
+    #     except IndexError:
+    #         return False
 
     def get_num_of_result(self) -> int:
         """
@@ -81,14 +80,14 @@ class CollectLinks:
             'x-locale': 'en-GB',
             'user-agent': self.user_agent
         }
-        new_one_proxy = self.get_proxy()
-        if not new_one_proxy:
-            print('No proxy in list')
-            return False
+        # new_one_proxy = self.get_proxy()
+        # if not new_one_proxy:
+        #     print('No proxy in list')
+        #     return False
 
         try:
-            proxies = {'http': new_one_proxy, 'https': new_one_proxy}
-            response = requests.get(self.url, headers=headers, proxies=proxies, timeout=10)
+            # proxies = {'http': new_one_proxy, 'https': new_one_proxy}
+            response = requests.get(self.url, headers=headers, timeout=10)
             return response.json()['total']
         except Exception as error:
             # print(f'{"-" * 15}>', error)
@@ -158,15 +157,15 @@ class CollectLinks:
             'user-agent': self.user_agent
         }
 
-        proxy = self.get_proxy()
+        # proxy = self.get_proxy()
         try:
-            async with session.get(url, proxy=proxy, headers=headers, timeout=15) as response:
+            async with session.get(url, headers=headers, timeout=15) as response:
                 await asyncio.sleep(2)
                 json_response = await response.json()
                 return self.collect_link_data(json_response, offset, num_of_books)
         except (ClientHttpProxyError, ContentTypeError, ClientProxyConnectionError, ClientConnectorError):
             print('Not valid proxy')
-            PROXY_LIST.delete_invalid_proxy(proxy, PROXY_LIST.all_poxy_list())
+            # PROXY_LIST.delete_invalid_proxy(proxy, PROXY_LIST.all_poxy_list())
             return await self.get_links_per_page(session, offset, num_of_books)
         except Exception as error:
             # print(f'{"-"* 15}>', error)

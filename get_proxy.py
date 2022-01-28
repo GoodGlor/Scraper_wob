@@ -17,7 +17,7 @@ class ListProxy:
         with open(f'{self.current_directory}/proxy.txt', 'w') as file:
             proxy_list = [pr + '\n'
                           for pr in proxy_list
-                          if proxy != pr]
+                          if proxy.replace('http://', '') != pr]
 
             file.writelines(proxy_list)
 

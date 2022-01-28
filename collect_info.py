@@ -10,7 +10,7 @@ import csv
 import os
 import gc
 
-PROXY_LIST = ListProxy()
+# PROXY_LIST = ListProxy()
 
 
 class CollectInfo:
@@ -25,17 +25,17 @@ class CollectInfo:
         self.all_links_and_data = all_data
         self.limit_connections = max_connections
 
-    @staticmethod
-    def get_proxy() -> str or bool:
-        """
-        Get random proxy
-        :return: random proxy
-        """
-        try:
-            return f"http://{random.choice(PROXY_LIST.main())}"
-        except IndexError:
-            print('No proxy in list')
-            return False
+    # @staticmethod
+    # def get_proxy() -> str or bool:
+    #     """
+    #     Get random proxy
+    #     :return: random proxy
+    #     """
+    #     try:
+    #         return f"http://{random.choice(PROXY_LIST.main())}"
+    #     except IndexError:
+    #         print('No proxy in list')
+    #         return False
 
     def convert_csv_to_excel(self):
         current_path = os.getcwd()
@@ -150,12 +150,12 @@ class CollectInfo:
         headers = {
             'user-agent': self.user_agent
         }
-        proxy = self.get_proxy()
-        if not proxy:
-            return False
+        # proxy = self.get_proxy()
+        # if not proxy:
+        #     return False
 
         try:
-            async with session.get(url, proxy=proxy, headers=headers, timeout=20) as response:
+            async with session.get(url, headers=headers, timeout=20) as response:
                 await asyncio.sleep(1)
                 text_response = await response.text()
                 return await self.collect_info_per_link(text_response, data, title, author, index,
@@ -164,7 +164,7 @@ class CollectInfo:
                 ClientHttpProxyError, ContentTypeError, ClientProxyConnectionError, ClientConnectorError,
                 ClientResponseError, AttributeError):
             print('Not valid proxy')
-            PROXY_LIST.delete_invalid_proxy(proxy, PROXY_LIST.all_poxy_list())
+            # PROXY_LIST.delete_invalid_proxy(proxy, PROXY_LIST.all_poxy_list())
             return await self.get_info_per_link(session, data, url, title, author, index, count_links_to_scrape)
         except Exception as error:
             # print(f'{"-" * 15}>', error)
